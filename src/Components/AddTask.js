@@ -21,7 +21,7 @@ const AddTask = () => {
             .then(data => {
                 if (data.insertedId) {
                     event.target.reset()
-                    toast.success("Your task successfully added", {
+                    toast.success("Your task added. You will see the task on the home page.", {
                         position: "top-center",
                         autoClose: 5000,
                         hideProgressBar: false,

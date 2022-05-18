@@ -1,16 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { toast } from 'react-toastify';
 import useTask from './Shared/useTask';
 import TaskCard from './TaskCard';
 
 const AllTask = () => {
     const [allTask, setAllTask] = useTask()
-
-    // useEffect(() => {
-    //     fetch('http://localhost:5000/todo')
-    //         .then(res => res.json())
-    //         .then(data => setAllTask(data))
-    // }, [])
 
     const handleDeleteTask = _id => {
         const confirm = window.confirm("Are you sure you want to delete this task ?")

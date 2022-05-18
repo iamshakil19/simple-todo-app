@@ -1,25 +1,26 @@
-
 import React, { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
 import auth from '../../firebase.init';
-import { useSendPasswordResetEmail, useSignInWithEmailAndPassword, useSignInWithGoogle } from 'react-firebase-hooks/auth';
-import './Login.css'
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useCreateUserWithEmailAndPassword, useSignInWithGoogle } from 'react-firebase-hooks/auth';
+import { toast } from 'react-toastify';
 import Navbar from '../Shared/Navbar';
 
-const Login = () => {
-    let location = useLocation();
-    let from = location.state?.from?.pathname || "/";
-    const navigate = useNavigate()
-    const navigateRegister = () => {
-        navigate('/register')
-    }
+
+const Register = () => {
 
     const [signInWithGoogle, googleUser, loading1, googleError] = useSignInWithGoogle(auth)
 
+    const navigateToLogin = () => {
+        navigate('/login')
+    }
+    const location = useLocation()
+    const [createUserWithEmailAndPassword, user, loading, firebaseError] =
+        useCreateUserWithEmailAndPassword(auth, { sendEmailVerification: true });
+
     const [userInfo, setUserInfo] = useState({
         email: "",
-        password: ""
+        password: "",
+        confirmPass: ""
     })
 
     const [customError, setCustomError] = useState({
@@ -27,21 +28,6 @@ const Login = () => {
         passwordError: "",
         othersError: ""
     })
-
-    const [
-        signInWithEmailAndPassword,
-        user,
-        loading,
-        firebaseError,
-    ] = useSignInWithEmailAndPassword(auth);
-
-    const [passwordResetEmail, sending, error] = useSendPasswordResetEmail(auth);
-
-    const handleFormSubmit = async event => {
-        const email = userInfo?.email
-        event.preventDefault()
-        await signInWithEmailAndPassword(userInfo.email, userInfo.password);
-    }
 
     const handleInputEmail = event => {
         const emailRegex = /\S+@\S+\.\S+/
@@ -69,17 +55,37 @@ const Login = () => {
         }
     }
 
+    const handleInputConfirmPassword = event => {
+
+        if (event.target.value === userInfo.password) {
+            setUserInfo({ ...userInfo, confirmPass: event.target.value })
+            setCustomError({ ...customError, passwordError: "" })
+        }
+        else {
+            setCustomError({ ...customError, passwordError: "Password don't match" })
+            setUserInfo({ ...userInfo, confirmPass: "" })
+        }
+    }
+
     useEffect(() => {
         if (firebaseError) {
             toast.error(`${firebaseError.message}`)
         }
     }, [firebaseError])
 
+    const navigate = useNavigate()
+    const from = location.state?.from?.pathname || "/"
     useEffect(() => {
         if (user || googleUser) {
             navigate(from, { replace: true })
         }
     })
+
+    const handleFormSubmit = event => {
+        event.preventDefault()
+        createUserWithEmailAndPassword(userInfo.email, userInfo.confirmPass);
+    }
+
 
     return (
         <div>
@@ -87,7 +93,7 @@ const Login = () => {
             <div className='login-container'>
                 <form onSubmit={handleFormSubmit} className='form-container'>
                     <div>
-                        <h2 className='login-text text-zinc-700'>Login</h2>
+                        <h2 className='login-text text-zinc-700'>Register</h2>
                     </div>
                     <div className='inputs-container'>
                         <p className='email-password-text'>Email</p>
@@ -107,21 +113,18 @@ const Login = () => {
                         {
                             customError?.passwordError && <p className='text-red-500 mt-1 text-sm'>{customError.passwordError}</p>
                         }
+                        <p className='email-password-text'>Confirm Password</p>
+                        <div className='flex'>
+                            <input onChange={handleInputConfirmPassword} className='input-style' type="password" name="" id="confirmPassword" placeholder='Type your confirm password' required />
+                        </div>
+                        <div className='bottom-line'></div>
+
 
                         <div className='flex justify-between forget-container'>
-                            <p className='mx-4 register'>Need an Account? <span onClick={navigateRegister} className="cursor-pointer hover:text-blue-700 text-blue-500">Please Register</span></p>
-                            <p onClick={async () => {
-                                if (userInfo.email === "") {
-                                    toast.error("Please provide your email")
-                                }
-                                else {
-                                    await passwordResetEmail(userInfo.email)
-                                    toast.success("Password reset email was sent")
-                                }
-                            }} className='forgot-password cursor-pointer'>Forgot Password?</p>
+                            <p className='mx-4 register my-4'>Already have an Account? <span onClick={navigateToLogin} className="cursor-pointer hover:text-blue-700 text-blue-500">Please Login</span></p>
                         </div>
 
-                        <input className='btn btn-primary w-full rounded-full text-white mt-3 mb-4' type="submit" value="Login" />
+                        <input className='btn btn-primary w-full rounded-full text-white mt-3 mb-4' type="submit" value="Register" />
 
                         <div className='or-container'>
                             <div className='line'></div>
@@ -138,4 +141,4 @@ const Login = () => {
     );
 };
 
-export default Login;
+export default Register;
