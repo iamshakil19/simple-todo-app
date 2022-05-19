@@ -10,7 +10,7 @@ const AddTask = () => {
         const taskDescription = event.target.taskDescription.value
 
         const task = { taskName, taskDescription }
-        fetch('http://localhost:5000/todo', {
+        fetch('https://thawing-badlands-59706.herokuapp.com/todo', {
             method: 'POST',
             headers: {
                 'content-type': 'application/json'
@@ -45,13 +45,13 @@ const AddTask = () => {
                                 <label class="label">
                                     <span class="label-text">Name</span>
                                 </label>
-                                <input name='taskName' type="text" placeholder="Task Name" class="input input-bordered w-full max-w-xs" required/>
+                                <input name='taskName' type="text" placeholder="Task Name" class="input input-bordered w-full max-w-xs" required />
                             </div>
                             <div class="form-control w-full max-w-xs mt-3">
                                 <label class="label">
                                     <span class="label-text">Description</span>
                                 </label>
-                                <textarea name='taskDescription' type="text" placeholder="Task Description" class="input input-bordered w-full max-w-xs h-20" required/>
+                                <textarea name='taskDescription' type="text" placeholder="Task Description" class="input input-bordered w-full max-w-xs h-20" required />
                             </div>
                             <div class="card-actions justify-end mt-5">
                                 <input className='btn btn-primary' type="submit" value="Submit" />

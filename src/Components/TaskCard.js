@@ -31,7 +31,15 @@ const TaskCard = ({ task, handleDeleteTask }) => {
                     <h2 className={isActive ? 'line-through card-title' : 'card-title'}>{taskName}</h2>
                     <p className={isActive ? 'line-through overflow-x-auto' : 'overflow-x-auto'}>{taskDescription}</p>
                     <div class="card-actions justify-end">
-                        <button onClick={handleClick} class="btn btn-primary btn-sm inline-block mt-3 mr-3">Complete</button>
+                        {
+                            isActive ?
+                                <button onClick={handleClick} class="btn btn-primary btn-sm inline-block mt-3 mr-3">Incomplete</button>
+                                :
+
+                                <button onClick={handleClick} class="btn btn-primary btn-sm inline-block mt-3 mr-3">Complete</button>
+
+
+                        }
                         <button onClick={() => handleDeleteTask(_id)} class="btn btn-accent btn-sm inline-block mt-3">Delete</button>
                     </div>
                 </div>

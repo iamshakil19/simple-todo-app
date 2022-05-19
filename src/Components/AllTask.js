@@ -9,7 +9,7 @@ const AllTask = () => {
     const handleDeleteTask = _id => {
         const confirm = window.confirm("Are you sure you want to delete this task ?")
         if (confirm) {
-            const url = `http://localhost:5000/todo/${_id}`;
+            const url = `https://thawing-badlands-59706.herokuapp.com/todo/${_id}`;
             fetch(url, {
                 method: 'DELETE'
             })
